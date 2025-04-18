@@ -31,6 +31,10 @@ function FormComponent() {
 
       if (response.ok) {
         setMessage("Form submitted successfully!");
+
+        // Reload the page after successful submission
+        window.location.reload(); // This will refresh the page
+
       } else {
         setMessage("Error submitting form. Please try again.");
       }
