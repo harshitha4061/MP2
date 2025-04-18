@@ -3,11 +3,16 @@ from flask_cors import CORS
 import pandas as pd
 import os
 
+from utils.whatif_handler import load_data_from_txt, apply_what_if_conditions
+
 app = Flask(__name__)
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:5173"}})
 
+
 # Load your dataset once when the server starts
 df = pd.read_csv("combined_dataset.csv")
+
+
 
 @app.route('/api/submit', methods=['POST'])
 def submit():
@@ -24,14 +29,26 @@ def submit():
     if match.empty:
         return jsonify({"error": "No match found in dataset"}), 404
 
-    # Convert match row to CSV
     matched_record_str = match.to_csv(index=False)  # Save the matched record in CSV format
 
     # Save matched record to file (overwrite mode)
     with open("data.txt", "w") as file:
         file.write(matched_record_str)
 
+
     return jsonify({"message": "Matching record saved to file!"}), 200
+    
+@app.route('/api/whatif', methods=['GET'])
+def run_what_if():
+    try:
+        sample = load_data_from_txt()
+        result = apply_what_if_conditions(sample)
+        return jsonify(result), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
 
 
 feature_thresholds = {
