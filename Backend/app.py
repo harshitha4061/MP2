@@ -12,6 +12,8 @@ CORS(app, supports_credentials=True, origins=["http://localhost:5173"])
 # Load your dataset once when the server starts
 df = pd.read_csv("combined_dataset.csv")
 
+
+
 @app.route('/api/submit', methods=['POST'])
 def submit():
     data = request.get_json()
@@ -28,11 +30,13 @@ def submit():
         return jsonify({"error": "No match found in dataset"}), 404
 
     # Convert match row to string
-    matched_record_str = match.to_string(index=False)
+    # matched_record_str = match.to_string(index=False)
+    matched_record_str = match.to_csv(index=False)  # Save the matched record in CSV format
 
     # Save matched record to file (overwrite mode)
-    with open("data.csv", "w") as file:
+    with open("data.txt", "w") as file:
         file.write(matched_record_str)
+
 
     return jsonify({"message": "Matching record saved to file!"}), 200
     

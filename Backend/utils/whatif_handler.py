@@ -5,7 +5,7 @@ model = joblib.load("model/credit_model.pkl")
 scaler = joblib.load("model/scaler.pkl")
 
 def load_data_from_txt():
-    with open("data.csv", "r") as file:
+    with open("data.txt", "r") as file:
         lines = file.readlines()
         header = lines[0].strip().split()
         values = lines[1].strip().split()
