@@ -3,7 +3,7 @@ from flask_cors import CORS
 import pandas as pd
 import os
 
-from utils.whatif_handler import load_data_from_txt, apply_what_if_conditions
+from utils.whatif_handler import load_data_from_txt, apply_what_if_conditions, predict_score
 
 app = Flask(__name__)
 CORS(app, supports_credentials=True, resources={r"/*": {"origins": "http://localhost:5173"}})
@@ -41,12 +41,11 @@ def submit():
 @app.route('/api/whatif', methods=['GET'])
 def run_what_if():
     try:
-        sample = load_data_from_txt()
+        sample = pd.read_csv("data.txt") 
         result = apply_what_if_conditions(sample)
         return jsonify(result), 200
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
+        return jsonify({'error': str(e)})
 
 
 
@@ -190,8 +189,8 @@ def upload_score():
             "Good ✅" if total_score >= 20 else
             "Medium ⚠️" if total_score >= 12 else
             "Bad ❌"
-        )
-
+        ) 
+        
         results.append({
             "CUST_ID": row.get("CUST_ID", "UNKNOWN"),
             "Name": row.get("Name", ""),

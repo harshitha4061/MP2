@@ -1,39 +1,40 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Form from './components/form';
+import Recommendations from './components/Recommendations';
 import CreditRiskDisplay from './components/datadisplay';
-import axios from 'axios';
+import Dashboard from './components/DB'; // ✅ Step 1: Import Dashboard
 
 const App = () => {
-  const [creditData, setCreditData] = useState(null);
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<Form />} />
+        <Route path="/dashboard" element={<Dashboard />} /> {/* ✅ Step 2 */}
+        <Route path="/recommendations" element={<Recommendations />} />
+        <Route path="/analysis" element={<CreditRiskDisplayWrapper />} />
+      </Routes>
+    </Router>
+  );
+};
 
-  useEffect(() => {
+const CreditRiskDisplayWrapper = () => {
+  const [creditData, setCreditData] = React.useState(null);
+
+  React.useEffect(() => {
     fetch('http://127.0.0.1:5000/upload-score', {
       method: 'GET',
-      credentials: 'include', // 👈 include credentials like cookies
+      credentials: 'include',
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setCreditData(data);
-      })
-      .catch((error) => {
-        console.error("Error fetching credit risk data:", error);
-      });
+      .then((res) => res.json())
+      .then((data) => setCreditData(data))
+      .catch((err) => console.error('Error fetching credit data:', err));
   }, []);
 
-  return (
-    <div>
-      <Form />
-      {creditData ? (
-        <CreditRiskDisplay data={creditData} />
-      ) : (
-        <p style={{ textAlign: 'center' }}>Loading credit risk data...</p>
-      )}
-    </div>
+  return creditData ? (
+    <CreditRiskDisplay data={creditData} />
+  ) : (
+    <p className="text-center mt-4">Loading analysis...</p>
   );
 };
 
