@@ -11,7 +11,7 @@ def load_data_from_txt():
         values = lines[1].strip().split()
         data_dict = dict(zip(header, values))
         df = pd.DataFrame([data_dict]) 
-        print(df)
+       
 
         # Convert numeric columns
         for col in df.columns:

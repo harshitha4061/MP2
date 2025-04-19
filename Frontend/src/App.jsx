@@ -1,6 +1,3 @@
-import React, { useEffect, useState } from 'react';
-import Form from './components/form';
-import CreditRiskDisplay from './components/datadisplay';
 import {Routes,Route} from 'react-router-dom';
 import Home from './components/home';
 
@@ -16,6 +13,7 @@ const App = () => {
         <Route path="/home" element={<Home />}></Route>
       </Routes>
     </div>
+
   );
 };
 

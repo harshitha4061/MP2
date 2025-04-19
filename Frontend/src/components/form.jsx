@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function FormComponent() {
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -10,13 +11,11 @@ function FormComponent() {
   const navigate = useNavigate();
 
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  }; 
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -24,10 +23,8 @@ function FormComponent() {
     try {
       const response = await fetch("http://127.0.0.1:5000/api/submit", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include", // allows sending cookies/auth
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify(formData),
       });
 
@@ -52,6 +49,7 @@ function FormComponent() {
       <h2 className="text-2xl font-bold mb-5">Authentication</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
+
         <input
           type="text"
           name="name"
@@ -85,9 +83,27 @@ function FormComponent() {
         <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">
           Submit
         </button>
+
       </form>
 
       {message && <p className="mt-4 text-center">{message}</p>}
+
+      {submitted && (
+        <div className="mt-6 flex justify-between">
+          <button
+            onClick={() => navigate("/recommendations")}
+            className="bg-green-500 text-white px-4 py-2 rounded"
+          >
+            Recommendations
+          </button>
+          <button
+            onClick={() => navigate("/analysis")}
+            className="bg-purple-500 text-white px-4 py-2 rounded"
+          >
+            Get Analysis
+          </button>
+        </div>
+      )}
     </div>
   );
 }
