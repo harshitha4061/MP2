@@ -28,46 +28,56 @@ const CreditRiskDisplay = () => {
     return <p className="text-center mt-6 text-red-600">No data available</p>;
   }
 
-  // Helper function for risk icons
   const getRiskIcon = (level = "") => {
     const risk = level.trim().toLowerCase();
-    if (risk.includes("low")) return "";   // Placeholder: Add icon or emoji
-    if (risk.includes("medium")) return ""; 
-    if (risk.includes("high")) return "";   
-    return "❓"; // Fallback emoji if unknown level
+    if (risk.includes("low")) return "🟢";
+    if (risk.includes("medium")) return "🟡";
+    if (risk.includes("high")) return "🔴";
+    return "❓";
   };
 
   return (
-    <div className="max-w-3xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg border">
-      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Customer Credit Risk Info</h2>
+    <div className="max-w-4xl mx-auto mt-10 p-6 shadow-lg rounded-lg border bg-white">
+      <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
+        Customer Credit Risk Info
+      </h2>
 
-      <div className="space-y-3 text-lg text-gray-700">
-        {/* Uncomment if needed */}
-        {/* <p><strong>Customer ID:</strong> {customerData.CUST_ID}</p> */}
+      <div className="text-center text-lg space-y-2 text-gray-700 mb-6">
         <p><strong>Name:</strong> {customerData.Name}</p>
-        <p><strong>Total Score:</strong> <span className="font-semibold text-blue-700">{customerData["Total Score"]}</span></p>
         <p>
-          <strong>Overall Credit Risk:</strong>{' '}
-          <span className={`font-semibold ${
-            customerData["Risk Level"] === 'High' ? 'text-red-600' :
-            customerData["Risk Level"] === 'Medium' ? 'text-yellow-600' :
-            'text-green-600'
-          }`}>
+          <strong>Total Score:</strong>{" "}
+          <span className="font-semibold text-blue-700">
+            {customerData["Total Score"]}
+          </span>
+        </p>
+        <p>
+          <strong>Overall Credit Risk:</strong>{" "}
+          <span
+            className={`font-bold ${
+              customerData["Risk Level"] === "High"
+                ? "text-red-600"
+                : customerData["Risk Level"] === "Medium"
+                ? "text-yellow-600"
+                : "text-green-600"
+            }`}
+          >
             {customerData["Risk Level"]} {getRiskIcon(customerData["Risk Level"])}
           </span>
         </p>
       </div>
 
-      <h3 className="text-2xl font-semibold mt-8 mb-4 text-gray-800">Category Scores</h3>
+      <h3 className="text-2xl font-semibold text-center text-gray-800 mb-4">
+        Category Scores
+      </h3>
 
-      <div className="flex flex-wrap gap-4">
+      <div className="flex overflow-x-auto space-x-6 px-4 py-2">
         {Object.entries(customerData["Category Scores"] || {}).map(([key, value]) => (
           <div
             key={key}
-            className="w-[180px] p-4 bg-gray-50 border rounded-xl shadow hover:shadow-md transform hover:scale-105 transition-all duration-200 ease-in-out"
+            className="min-w-[250px] bg-gray-50 border border-gray-200 rounded-xl shadow-md p-4 transition-transform transform hover:scale-105 hover:shadow-lg flex-shrink-0"
           >
-            <p className="font-medium text-gray-700 mb-1">{key}</p>
-            <p className="text-lg font-bold text-indigo-700">{value}</p>
+            <p className="font-medium text-gray-800 mb-2">{key}</p>
+            <p className="text-lg text-indigo-700 font-bold">{value}</p>
           </div>
         ))}
       </div>
@@ -76,4 +86,3 @@ const CreditRiskDisplay = () => {
 };
 
 export default CreditRiskDisplay;
-

@@ -8,7 +8,6 @@ function FormComponent() {
     email: "",
     password: "",
   });
-  const navigate = useNavigate();
 
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
@@ -88,22 +87,6 @@ function FormComponent() {
 
       {message && <p className="mt-4 text-center">{message}</p>}
 
-      {submitted && (
-        <div className="mt-6 flex justify-between">
-          <button
-            onClick={() => navigate("/recommendations")}
-            className="bg-green-500 text-white px-4 py-2 rounded"
-          >
-            Recommendations
-          </button>
-          <button
-            onClick={() => navigate("/analysis")}
-            className="bg-purple-500 text-white px-4 py-2 rounded"
-          >
-            Get Analysis
-          </button>
-        </div>
-      )}
     </div>
   );
 }

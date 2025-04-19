@@ -47,7 +47,7 @@ const Home = () => {
     };
 
     const handleRecommendationClick = () => {
-        navigate('/whatif');
+        navigate('/recommendations');
     };
 
     return (
