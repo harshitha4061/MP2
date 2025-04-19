@@ -2,8 +2,14 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function FormComponent() {
-  const [formData, setFormData] = useState({ name: "", email: "", age: "" });
-  const [submitted, setSubmitted] = useState(false);
+
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const navigate = useNavigate();
+
   const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
@@ -24,9 +30,11 @@ function FormComponent() {
 
       if (response.ok) {
         setMessage("Form submitted successfully!");
+
         setTimeout(() => {
-            navigate("/dashboard"); // ✅ redirect after submit
-          }, 1000);
+          navigate("/home");
+        }, 1000); 
+
       } else {
         setMessage("Error submitting form. Please try again.");
       }
@@ -38,13 +46,44 @@ function FormComponent() {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-5 border rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-5">Submit Your Details</h2>
+      <h2 className="text-2xl font-bold mb-5">Authentication</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
-        <input type="text" name="name" placeholder="Enter Name" value={formData.name} onChange={handleChange} className="w-full p-2 border rounded" required />
-        <input type="email" name="email" placeholder="Enter Email" value={formData.email} onChange={handleChange} className="w-full p-2 border rounded" required />
-        <input type="number" name="age" placeholder="Enter Age" value={formData.age} onChange={handleChange} className="w-full p-2 border rounded" required />
-        <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">Submit</button>
+
+        <input
+          type="text"
+          name="name"
+          placeholder="Enter Name"
+          value={formData.name}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        />
+
+        <input
+          type="email"
+          name="email"
+          placeholder="Enter Email"
+          value={formData.email}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="Enter password"
+          value={formData.password}
+          onChange={handleChange}
+          className="w-full p-2 border rounded"
+          required
+        />
+
+        <button type="submit" className="bg-blue-500 text-white p-2 rounded w-full">
+          Submit
+        </button>
+
       </form>
 
       {message && <p className="mt-4 text-center">{message}</p>}

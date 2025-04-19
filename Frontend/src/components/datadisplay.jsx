@@ -1,8 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-const CreditRiskDisplay = ({ data }) => {
-  const customerData = data?.results?.[0];
-  
+const CreditRiskDisplay = () => {
+  const [creditData, setCreditData] = useState(null);
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:5000/upload-score', {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setCreditData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching credit risk data:", error);
+      });
+  }, []);
+
+  const customerData = creditData?.results?.[0];
 
   if (!customerData) {
     return <p className="text-center mt-6 text-red-600">No data available</p>;
@@ -10,25 +30,20 @@ const CreditRiskDisplay = ({ data }) => {
 
   // Helper function for risk icons
   const getRiskIcon = (level = "") => {
-  const risk = level.trim().toLowerCase();
-
-  // Checking exact risk levels (now including possible trailing symbols like '⚠️')
-  if (risk.includes("low")) return "";   // Green for Low risk
-  if (risk.includes("medium")) return ""; // Yellow for Medium risk
-  if (risk.includes("high")) return "";   // Red for High risk
-
-  return "❓"; // Fallback emoji if unknown level
-};
-
-  
-  
+    const risk = level.trim().toLowerCase();
+    if (risk.includes("low")) return "";   // Placeholder: Add icon or emoji
+    if (risk.includes("medium")) return ""; 
+    if (risk.includes("high")) return "";   
+    return "❓"; // Fallback emoji if unknown level
+  };
 
   return (
     <div className="max-w-3xl mx-auto mt-10 p-6 bg-white shadow-lg rounded-lg border">
       <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">Customer Credit Risk Info</h2>
 
       <div className="space-y-3 text-lg text-gray-700">
-        <p><strong>Customer ID:</strong> {customerData.CUST_ID}</p>
+        {/* Uncomment if needed */}
+        {/* <p><strong>Customer ID:</strong> {customerData.CUST_ID}</p> */}
         <p><strong>Name:</strong> {customerData.Name}</p>
         <p><strong>Total Score:</strong> <span className="font-semibold text-blue-700">{customerData["Total Score"]}</span></p>
         <p>
@@ -61,3 +76,4 @@ const CreditRiskDisplay = ({ data }) => {
 };
 
 export default CreditRiskDisplay;
+

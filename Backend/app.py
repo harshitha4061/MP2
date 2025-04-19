@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import pandas as pd
+import csv
 import os
 
 from utils.whatif_handler import load_data_from_txt, apply_what_if_conditions, predict_score
@@ -200,6 +201,27 @@ def upload_score():
         })
 
     return jsonify({"results": results})
+
+@app.route('/get-name', methods=['GET'])
+def get_name():
+    try:
+        # Open the data.txt file, which contains CSV data
+        with open('data.txt', 'r') as file:
+            reader = csv.DictReader(file)  # Using DictReader to map CSV rows to dicts
+            rows = list(reader)
+            
+            if not rows:
+                return jsonify({'error': 'No data found in the file'}), 400
+
+            # Extract the name from the last row (or choose any other row if required)
+            name = rows[-1]['Name']  # Assuming 'Name' is the header for the last column
+            return jsonify({'name': name}), 200  # Return the name as JSON response
+
+    except Exception as e:
+        # Catch all other exceptions and log them
+        print(f"Error occurred: {str(e)}")
+        return jsonify({'error': f'Failed to read data: {str(e)}'}), 500
+
 
 if __name__ == '__main__':
     app.run(debug=True)
