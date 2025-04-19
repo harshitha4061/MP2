@@ -33,7 +33,7 @@ const CreditRiskDisplay = () => {
     if (risk.includes("low")) return "🟢";
     if (risk.includes("medium")) return "🟡";
     if (risk.includes("high")) return "🔴";
-    return "❓";
+
   };
 
   return (
