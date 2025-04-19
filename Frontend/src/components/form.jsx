@@ -1,11 +1,13 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function FormComponent() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    age: "",
+    password: "",
   });
+  const navigate = useNavigate();
 
   const [message, setMessage] = useState("");
 
@@ -32,8 +34,9 @@ function FormComponent() {
       if (response.ok) {
         setMessage("Form submitted successfully!");
 
-        // Reload the page after successful submission
-        window.location.reload(); // This will refresh the page
+        setTimeout(() => {
+          navigate("/home");
+        }, 1000); 
 
       } else {
         setMessage("Error submitting form. Please try again.");
@@ -46,7 +49,7 @@ function FormComponent() {
 
   return (
     <div className="max-w-md mx-auto mt-10 p-5 border rounded-lg shadow-lg">
-      <h2 className="text-2xl font-bold mb-5">Submit Your Details</h2>
+      <h2 className="text-2xl font-bold mb-5">Authentication</h2>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
@@ -70,10 +73,10 @@ function FormComponent() {
         />
 
         <input
-          type="number"
-          name="age"
-          placeholder="Enter Age"
-          value={formData.age}
+          type="password"
+          name="password"
+          placeholder="Enter password"
+          value={formData.password}
           onChange={handleChange}
           className="w-full p-2 border rounded"
           required

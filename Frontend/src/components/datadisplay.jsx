@@ -1,24 +1,57 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
-const CreditRiskDisplay = ({ data }) => {
-  // Assuming `data.results` contains the array of credit risk data, we pick the first entry
-  const customerData = data?.results?.[0]; 
+const CreditRiskDisplay = () => {
+  const [creditData, setCreditData] = useState(null);
+
+  useEffect(() => {
+    fetch('http://127.0.0.1:5000/upload-score', {
+      method: 'GET',
+      credentials: 'include',
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then((data) => {
+        setCreditData(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching credit risk data:", error);
+      });
+  }, []);
+
+  const customerData = creditData?.results?.[0];
 
   if (!customerData) {
-    return <p>No data available</p>; // Fallback for missing data
+    return <p className="text-center text-xl text-red-500">No data available</p>;
   }
 
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial', maxWidth: '600px', margin: 'auto' }}>
-      <h2>Customer Credit Risk Info</h2>
-      <p><strong>Customer ID:</strong> {customerData.CUST_ID}</p>
-      <p><strong>Name:</strong> {customerData.Name}</p>
-      <p><strong>Total Score:</strong> {customerData["Total Score"]}</p>
-      <p><strong>Overall Credit Risk:</strong> {customerData["Risk Level"]}</p>
-      <h3>Category Scores:</h3>
-      <ul>
+    <div className="p-6 max-w-3xl mx-auto bg-white rounded-lg shadow-lg">
+      <h2 className="text-3xl font-semibold text-center mb-5 text-blue-600">Customer Credit Risk Info</h2>
+      
+      <div className="space-y-4">
+        {/* <p><strong className="text-lg">Customer ID:</strong> <span className="text-gray-700">{customerData.CUST_ID}</span></p> */}
+        <p><strong className="text-lg">Name:</strong> <span className="text-gray-700">{customerData.Name}</span></p>
+        <p><strong className="text-lg">Total Score:</strong> <span className="text-gray-700">{customerData["Total Score"]}</span></p>
+        <p><strong className="text-lg">Overall Credit Risk:</strong> 
+          <span className={`font-bold ${
+            customerData["Risk Level"] === "High" ? 'text-red-600' : customerData["Risk Level"] === "Low" ? 'text-green-600' : 'text-yellow-600'
+          }`}>
+            {customerData["Risk Level"]}
+          </span>
+        </p>
+      </div>
+
+      <h3 className="text-2xl font-semibold mt-6 text-gray-800">Category Scores:</h3>
+      <ul className="space-y-2 mt-2">
         {Object.entries(customerData["Category Scores"] || {}).map(([key, value]) => (
-          <li key={key}><strong>{key}:</strong> {value}</li>
+          <li key={key} className="flex justify-between">
+            <span className="font-medium text-gray-600">{key}:</span>
+            <span className="text-gray-800">{value}</span>
+          </li>
         ))}
       </ul>
     </div>
